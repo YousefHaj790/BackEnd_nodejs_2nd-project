@@ -6,7 +6,6 @@ const ConnectToDB = require('./ConfigFile/db');
 const PORT = 3003;
 
 
-console.log("test update repo")
 ConnectToDB();
 
 const app = express();

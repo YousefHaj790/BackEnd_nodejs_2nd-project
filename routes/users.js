@@ -8,9 +8,9 @@ const router = express.Router();
 
 router.post('/signup', async (req, res) => {
     try {
-        const { email, password } = req.body
+        const { userName,email, password } = req.body
         const newuser = new User({
-            email, password
+            userName,email, password
         })
         await newuser.save();
         const token = jwt.sign({ id: newuser._id }, process.env.URI);
@@ -26,7 +26,7 @@ router.post('/signup', async (req, res) => {
 // --------------------------
 router.post('/signin', async (req, res) => {
     try {
-        const { username,email, password } = req.body;
+        const { email, password } = req.body;
         const user = await User.findOne({ email })
         const isValid = await user.isValidPassword(password)
         if (isValid && user) {
@@ -71,19 +71,20 @@ router.get('/:userId', middleware, async (req, res) => {
 // -------------------------------
 router.put('/:userId', middleware, async (req, res) => {
     try {
-        const { email, password } = req.body
-        const user = await User.findByIdAndUpdate(req.params.userId, { email, password })
+        const { userName,email, password } = req.body
+        const user = await User.findByIdAndUpdate(req.params.userId, { userName,email, password })
         if (user) {
             res.json(user)
         } else {
-            res.status(404).json({ message: "USER NOT FOUND" })
+            res.status(404).json({ message: "cant recognize the user!" })
         }
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
 })
 
-// Delete user by id
+
+// -------------------------
 router.delete('/:userId', middleware, async (req, res) => {
     try {
         const response = await User.findByIdAndDelete(req.params.userId)
